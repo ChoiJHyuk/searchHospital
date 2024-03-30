@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+    function changeValue() {
+        var value = $('#selectBox1').val()
+        $('#selectBox2').empty();
+        $('#selectBox2').append("<option>===두번째 지명===</option>")
+        $.ajax({
+            url: "/select",
+            type: "post",
+            async: false,
+            data: { "value": value },
+            success: function (data) {
+                $(data).each(function () {
+                    $("#selectBox2").append("<option>" + this + "</option>");
+                })
+            }
+        })
+    }
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+    <!-- custom CSS -->
+    <title>바이러스 안심 병원 조회 서비스</title>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h3>바이러스 안심 병원 조회 서비스</h1>
+            <form th:action="@{/search}" method="get">
+                <select id="selectBox1" name="selectBox1" class="form-select form-select-sm w-50"
+                    aria-label=".form-select-sm example" onchange="changeValue()">
+                    <option>===첫번째 지명===</option>
+                    <option th:each="sec1 : ${first}" th:value="${sec1}" th:text="${sec1}"></option>
+                </select>
+                <select id="selectBox2" name="selectBox2" class="form-select form-select-sm my-2 w-50"
+                    aria-label=".form-select-sm example">
+                    <option>===두번째 지명===</option>
+                </select>
+                <div class="my-2 d-flex justify-content-start">
+                    <input type="submit" value="병원조회" class="btn btn-primary">
+                </div>
+            </form>
+    </div>
+    <div class="container">
+        <hr>
+        <div class="row align-items-start">
+            <div class="col">
+                병원명
+            </div>
+            <div class="col">
+                국민안심병원여부
+            </div>
+            <div class="col">
+                진료가능여부
+            </div>
+        </div>
+        <hr style="border: solid 2px;">
+
+        <div th:each="hospital : ${hospitalList}" class="row align-items-center">
+            <div class="col" th:text="${hospital.f}">
+            </div>
+            <div class="col" th:text="${hospital.c}">
+            </div>
+            <div class="col" th:text="${hospital.b}">
+            </div>
+            <hr>
+        </div>
+    </div>
+    <script th:src="@{/bootstrap.min.js}"></script>
+</body>
+
+</html>
